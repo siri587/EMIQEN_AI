@@ -89,11 +89,11 @@ export const HeroSection: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => scrollTo('#platform')}
+                onClick={() => scrollTo('#playground')}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-semibold text-emiqen-navy bg-white hover:bg-slate-50 border border-slate-200 active:scale-[0.98] rounded-xl transition-all shadow-subtle"
               >
                 <Layers className="w-4 h-4 text-emiqen-blue" />
-                <span>{brand.secondaryCta}</span>
+                <span>Try Live Playground</span>
               </button>
             </div>
 
@@ -121,7 +121,7 @@ export const HeroSection: React.FC = () => {
           </div>
 
           {/* Right Column: Custom Illustrative Interactive Console */}
-          <div id="playground" className="lg:col-span-6 scroll-mt-28">
+          <div id="hero-demo" className="lg:col-span-6 scroll-mt-28">
             <IllustrativeVoiceDemo />
           </div>
         </div>

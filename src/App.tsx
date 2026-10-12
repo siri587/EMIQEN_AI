@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // Landing page sections
 import { SiteHeader } from './components/SiteHeader';
 import { HeroSection } from './components/HeroSection';
+import { TryExperienceSection } from './components/TryExperienceSection';
 import { ChallengeSection } from './components/ChallengeSection';
 import { CapabilitiesSection } from './components/CapabilitiesSection';
 import { DataAdvantageSection } from './components/DataAdvantageSection';
@@ -14,11 +15,12 @@ import { StatusSection } from './components/StatusSection';
 import { ContactSection } from './components/ContactSection';
 import { SiteFooter } from './components/SiteFooter';
 
-// Auth pages
+// Auth pages & Dedicated Playground
 import { LoginPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { PlaygroundPage } from './pages/PlaygroundPage';
 
 /** Full landing page */
 const LandingPage: React.FC = () => (
@@ -50,6 +52,8 @@ const LandingPage: React.FC = () => (
     <SiteHeader />
     <main id="main-content" className="flex-grow relative z-10">
       <HeroSection />
+      {/* Interactive Try Experience / Playground */}
+      <TryExperienceSection id="playground" />
       <ChallengeSection />
       <CapabilitiesSection />
       {/* Data Advantage section is placed after capabilities and before How It Works */}
@@ -69,6 +73,7 @@ export const App: React.FC = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/playground" element={<PlaygroundPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />

@@ -19,8 +19,8 @@ const PRODUCTS: DropdownItem[] = [
   {
     title: 'Voice Agents',
     desc: 'Multilingual conversational voice agents for telephony and app support',
-    href: '#platform',
-    badge: 'Flagship',
+    href: '#playground',
+    badge: 'Try Live',
     icon: Mic,
   },
   {
@@ -39,7 +39,8 @@ const PRODUCTS: DropdownItem[] = [
   {
     title: 'Indic Audio Studio',
     desc: 'Speech-to-text recognition and neural voice synthesis in Indian accents',
-    href: '#platform',
+    href: '#playground',
+    badge: 'TTS & STT',
     icon: AudioWaveform,
   },
 ];

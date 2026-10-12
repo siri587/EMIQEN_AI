@@ -379,6 +379,7 @@ export const siteContent = {
       {
         title: 'Platform',
         links: [
+          { label: 'Interactive Playground', href: '#playground' },
           { label: 'Capabilities', href: '#platform' },
           { label: 'How it works', href: '#how-it-works' },
           { label: 'Pipeline Architecture', href: '#how-it-works' },
