@@ -103,7 +103,7 @@ export const HeroSection: React.FC = () => {
           </div>
 
           {/* Right Column: Custom Illustrative Interactive Console */}
-          <div className="lg:col-span-6">
+          <div id="playground" className="lg:col-span-6 scroll-mt-28">
             <IllustrativeVoiceDemo />
           </div>
         </div>
