@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-navy: #071B3A;
+    --color-navy-dark: #040F22;
+    --color-navy-light: #0D274E;
+    --color-blue: #1769F8;
+    --color-cyan: #00D4E8;
+    --color-violet: #6D28D9;
+    --color-white: #FFFFFF;
+    --color-soft-bg: #F5F8FF;
+    --color-soft-border: #DCE7F6;
+  }
+
+  body {
+    color: #071B3A;
+    background-color: #FFFFFF;
+    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Accessible focus indicators */
+  :focus-visible {
+    outline: 2px solid #1769F8;
+    outline-offset: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom subtle waveform animations */
+@keyframes wavePulse {
+  0%, 100% {
+    transform: scaleY(0.4);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.animate-wave-1 {
+  animation: wavePulse 1.4s ease-in-out infinite;
+}
+.animate-wave-2 {
+  animation: wavePulse 1.2s ease-in-out infinite 0.2s;
+}
+.animate-wave-3 {
+  animation: wavePulse 1.6s ease-in-out infinite 0.4s;
+}
+.animate-wave-4 {
+  animation: wavePulse 1.3s ease-in-out infinite 0.1s;
+}
+.animate-wave-5 {
+  animation: wavePulse 1.5s ease-in-out infinite 0.3s;
+}
+
+/* Glass & Glow utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(220, 231, 246, 0.8);
+}
+
+.dark-glass-panel {
+  background: rgba(13, 39, 78, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 212, 232, 0.2);
+}
+
