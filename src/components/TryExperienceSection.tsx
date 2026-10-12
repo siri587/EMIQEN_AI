@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Bot, Volume2, Mic, Sparkles } from 'lucide-react';
 import { VoiceAgentsTab } from './try-experience/VoiceAgentsTab';
-import { TextToSpeechTab, EXACT_26_VOICES } from './try-experience/TextToSpeechTab';
+import { TextToSpeechTab } from './try-experience/TextToSpeechTab';
+import { EXACT_26_VOICES } from './try-experience/voicesData';
 import { SpeechToTextTab } from './try-experience/SpeechToTextTab';
 
 export type TryExperienceTab = 'voice-agents' | 'text-to-speech' | 'speech-to-text';

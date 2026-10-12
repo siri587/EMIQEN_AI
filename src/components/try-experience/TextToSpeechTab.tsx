@@ -5,16 +5,8 @@ import {
 } from 'lucide-react';
 import { WaveformVisualizer, WaveformState } from '../WaveformVisualizer';
 import { ApiIntegrationModal } from './ApiIntegrationModal';
-
-// Exactly 26 unique voice names as specified by user instructions
-export const EXACT_26_VOICES = [
-  'Aarav', 'Amit', 'Arushi', 'Diya', 'Gargi', 'Kabir', 'Kavita',
-  'Neeraj', 'Neha', 'Nila', 'Rahul', 'Rehan', 'Riya', 'Rohan',
-  'Sagar', 'SagarM', 'Samar', 'Sana', 'Seema', 'Shailika',
-  'Shreeraj', 'Tarini', 'Tripti', 'Vikas', 'Vikram', 'Zara'
-] as const;
-
-export type VoiceName = typeof EXACT_26_VOICES[number];
+import { EXACT_26_VOICES, type VoiceName } from './voicesData';
+export type { VoiceName };
 
 const DEFAULT_HINDI_SAMPLE =
   'भारत की सुबह का नज़ारा ही कुछ और होता है। चाय की चुस्की के साथ अखबार, बच्चों की किलकारियां, और मंदिर की घंटियों की आवाज़, सब मिलकर एक ऐसा माहौल बनाते हैं जो दिल को सुकून देता है। यही तो है अपने देश की खूबसूरती।';
