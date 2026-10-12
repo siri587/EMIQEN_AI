@@ -1,6 +1,7 @@
 import React from 'react';
 import { siteContent } from '../data/siteContent';
 import { IllustrativeVoiceDemo } from './IllustrativeVoiceDemo';
+import { SpeakingHeadsScene } from './SpeakingHeadsScene';
 import { ArrowRight, Layers, Sparkles, MessageSquareQuote } from 'lucide-react';
 
 export const HeroSection: React.FC = () => {
@@ -17,38 +18,26 @@ export const HeroSection: React.FC = () => {
   };
 
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-transparent">
+    <section id="hero-section" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-transparent min-h-[720px]">
+      {/* Real-Time WebGL 3D Interactive Speaking Heads with Scroll-Linked Rotation */}
+      <SpeakingHeadsScene />
+
       {/* Dynamic Ambient Background Mesh (Royal Blue, Cyan & Violet Aura Orbs) */}
       <div
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] rounded-full blur-[110px] pointer-events-none z-0"
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] rounded-full blur-[110px] pointer-events-none z-0 opacity-80"
         style={{
           background: 'radial-gradient(ellipse at center, rgba(0, 212, 232, 0.35) 0%, rgba(23, 105, 248, 0.28) 40%, rgba(109, 40, 217, 0.16) 75%, transparent 100%)'
         }}
         aria-hidden="true"
       />
       <div
-        className="absolute top-12 right-[-5%] w-[550px] h-[550px] rounded-full bg-gradient-to-bl from-emiqen-cyan/30 to-transparent blur-[100px] pointer-events-none z-0"
+        className="absolute top-12 right-[-5%] w-[550px] h-[550px] rounded-full bg-gradient-to-bl from-emiqen-cyan/25 to-transparent blur-[100px] pointer-events-none z-0"
         aria-hidden="true"
       />
       <div
-        className="absolute top-72 left-[-8%] w-[520px] h-[520px] rounded-full bg-gradient-to-tr from-emiqen-violet/25 via-emiqen-blue/20 to-transparent blur-[110px] pointer-events-none z-0"
+        className="absolute top-72 left-[-8%] w-[520px] h-[520px] rounded-full bg-gradient-to-tr from-emiqen-violet/20 via-emiqen-blue/15 to-transparent blur-[110px] pointer-events-none z-0"
         aria-hidden="true"
       />
-
-      {/* Acoustic Waveform Flow in Background */}
-      <div className="absolute inset-0 pointer-events-none z-0 opacity-60 flex items-center justify-center overflow-hidden">
-        <svg className="w-full max-w-7xl h-72 text-emiqen-blue/30" viewBox="0 0 1200 200" fill="none">
-          <path d="M0 100 C 150 40, 300 160, 450 100 C 600 40, 750 160, 900 100 C 1050 40, 1150 140, 1200 100" stroke="currentColor" strokeWidth="1.5" strokeDasharray="6 6" />
-          <path d="M0 100 C 200 140, 400 60, 600 100 C 800 140, 1000 60, 1200 100" stroke="url(#heroWaveGrad)" strokeWidth="2.5" />
-          <defs>
-            <linearGradient id="heroWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#00D4E8" stopOpacity="0.7" />
-              <stop offset="50%" stopColor="#1769F8" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#6D28D9" stopOpacity="0.7" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -81,18 +70,18 @@ export const HeroSection: React.FC = () => {
               <button
                 type="button"
                 onClick={() => scrollTo('#contact')}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-base font-semibold text-white bg-emiqen-blue hover:bg-emiqen-blue-hover active:scale-[0.98] rounded-xl shadow-elevated transition-all"
+                className="group w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-base font-semibold text-white bg-emiqen-blue hover:bg-emiqen-blue-hover hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emiqen-blue/25 active:translate-y-0 active:scale-[0.98] rounded-xl shadow-elevated transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emiqen-blue cursor-pointer"
               >
                 <span>{brand.primaryCta}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
               </button>
 
               <button
                 type="button"
                 onClick={() => scrollTo('#playground')}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-semibold text-emiqen-navy bg-white hover:bg-slate-50 border border-slate-200 active:scale-[0.98] rounded-xl transition-all shadow-subtle"
+                className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-semibold text-emiqen-navy bg-white hover:bg-slate-50/90 hover:text-emiqen-blue border border-slate-200 hover:border-emiqen-blue/40 hover:-translate-y-0.5 hover:shadow-md hover:shadow-emiqen-blue/5 active:translate-y-0 active:scale-[0.98] rounded-xl transition-all duration-200 shadow-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emiqen-blue cursor-pointer"
               >
-                <Layers className="w-4 h-4 text-emiqen-blue" />
+                <Layers className="w-4 h-4 text-emiqen-blue transition-transform duration-200 group-hover:rotate-6" />
                 <span>Try Live Playground</span>
               </button>
             </div>

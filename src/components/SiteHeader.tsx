@@ -298,7 +298,7 @@ export const SiteHeader: React.FC = () => {
             <a
               href="#playground"
               onClick={(e) => scrollToSection(e, '#playground')}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-emiqen-navy bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-full transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-emiqen-navy bg-slate-100 hover:bg-white hover:text-emiqen-blue border border-slate-300/80 hover:border-emiqen-blue/40 rounded-full shadow-2xs hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               <span>Try Playground</span>
@@ -308,10 +308,10 @@ export const SiteHeader: React.FC = () => {
             <a
               href="#contact"
               onClick={(e) => scrollToSection(e, '#contact')}
-              className="inline-flex items-center gap-1 px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-emiqen-blue to-emiqen-navy hover:opacity-95 rounded-xl shadow-sm transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emiqen-blue hover:scale-[1.02] active:scale-[0.98]"
+              className="group inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-emiqen-blue to-emiqen-navy hover:from-emiqen-blue hover:to-emiqen-blue-hover rounded-xl shadow-sm hover:shadow-lg hover:shadow-emiqen-blue/25 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emiqen-blue"
             >
               <span>Contact Sales</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
 
             <div className="h-5 w-px bg-slate-200" />
@@ -319,7 +319,7 @@ export const SiteHeader: React.FC = () => {
             {/* Log In */}
             <Link
               to="/login"
-              className="px-3 py-2 text-xs font-bold text-slate-600 hover:text-emiqen-blue hover:bg-slate-100 rounded-lg transition-colors"
+              className="px-3 py-2 text-xs font-bold text-slate-600 hover:text-emiqen-blue hover:bg-slate-100/90 rounded-lg transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue"
             >
               Log In
             </Link>
@@ -327,9 +327,9 @@ export const SiteHeader: React.FC = () => {
             {/* Sign Up */}
             <Link
               to="/signup"
-              className="inline-flex items-center gap-1 px-3.5 py-2 text-xs font-bold text-emiqen-blue bg-emiqen-blue/10 hover:bg-emiqen-blue/20 rounded-xl transition-colors"
+              className="group inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-emiqen-blue hover:text-white bg-emiqen-blue/10 hover:bg-emiqen-blue rounded-xl shadow-2xs hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue"
             >
-              <UserCircle2 className="w-3.5 h-3.5" />
+              <UserCircle2 className="w-3.5 h-3.5 transition-transform duration-200 group-hover:scale-110" />
               <span>Sign Up</span>
             </Link>
           </div>

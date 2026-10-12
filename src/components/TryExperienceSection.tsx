@@ -59,13 +59,13 @@ export const TryExperienceSection: React.FC<TryExperienceSectionProps> = ({
               aria-selected={activeTab === 'voice-agents'}
               aria-controls="voice-agents-panel"
               onClick={() => setActiveTab('voice-agents')}
-              className={`flex-1 min-w-[130px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue ${
+              className={`group flex-1 min-w-[130px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue cursor-pointer ${
                 activeTab === 'voice-agents'
-                  ? 'bg-emiqen-blue text-white shadow-sm ring-1 ring-emiqen-blue'
-                  : 'text-slate-600 hover:text-emiqen-navy hover:bg-slate-100/70'
+                  ? 'bg-emiqen-blue text-white shadow-md shadow-emiqen-blue/20 ring-1 ring-emiqen-blue'
+                  : 'text-slate-600 hover:text-emiqen-navy hover:bg-slate-100/90'
               }`}
             >
-              <Bot className={`w-4 h-4 ${activeTab === 'voice-agents' ? 'text-emiqen-cyan' : 'text-slate-400'}`} />
+              <Bot className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${activeTab === 'voice-agents' ? 'text-emiqen-cyan' : 'text-slate-400 group-hover:text-emiqen-blue'}`} />
               <span>Voice Agents</span>
             </button>
 
@@ -76,13 +76,13 @@ export const TryExperienceSection: React.FC<TryExperienceSectionProps> = ({
               aria-selected={activeTab === 'text-to-speech'}
               aria-controls="text-to-speech-panel"
               onClick={() => setActiveTab('text-to-speech')}
-              className={`flex-1 min-w-[130px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue ${
+              className={`group flex-1 min-w-[130px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue cursor-pointer ${
                 activeTab === 'text-to-speech'
-                  ? 'bg-emiqen-blue text-white shadow-sm ring-1 ring-emiqen-blue'
-                  : 'text-slate-600 hover:text-emiqen-navy hover:bg-slate-100/70'
+                  ? 'bg-emiqen-blue text-white shadow-md shadow-emiqen-blue/20 ring-1 ring-emiqen-blue'
+                  : 'text-slate-600 hover:text-emiqen-navy hover:bg-slate-100/90'
               }`}
             >
-              <Volume2 className={`w-4 h-4 ${activeTab === 'text-to-speech' ? 'text-emiqen-cyan' : 'text-slate-400'}`} />
+              <Volume2 className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${activeTab === 'text-to-speech' ? 'text-emiqen-cyan' : 'text-slate-400 group-hover:text-emiqen-blue'}`} />
               <span>Text to Speech</span>
             </button>
 
@@ -93,13 +93,13 @@ export const TryExperienceSection: React.FC<TryExperienceSectionProps> = ({
               aria-selected={activeTab === 'speech-to-text'}
               aria-controls="speech-to-text-panel"
               onClick={() => setActiveTab('speech-to-text')}
-              className={`flex-1 min-w-[130px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue ${
+              className={`group flex-1 min-w-[130px] flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue cursor-pointer ${
                 activeTab === 'speech-to-text'
-                  ? 'bg-emiqen-blue text-white shadow-sm ring-1 ring-emiqen-blue'
-                  : 'text-slate-600 hover:text-emiqen-navy hover:bg-slate-100/70'
+                  ? 'bg-emiqen-blue text-white shadow-md shadow-emiqen-blue/20 ring-1 ring-emiqen-blue'
+                  : 'text-slate-600 hover:text-emiqen-navy hover:bg-slate-100/90'
               }`}
             >
-              <Mic className={`w-4 h-4 ${activeTab === 'speech-to-text' ? 'text-emiqen-cyan' : 'text-slate-400'}`} />
+              <Mic className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${activeTab === 'speech-to-text' ? 'text-emiqen-cyan' : 'text-slate-400 group-hover:text-emiqen-blue'}`} />
               <span>Speech to Text</span>
             </button>
           </div>

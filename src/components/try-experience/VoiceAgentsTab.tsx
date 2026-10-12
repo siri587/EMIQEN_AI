@@ -314,10 +314,10 @@ export const VoiceAgentsTab: React.FC<VoiceAgentsTabProps> = ({ availableVoices 
                     key={agent.id}
                     type="button"
                     onClick={() => handleSelectAgent(agent.id)}
-                    className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-start gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue ${
+                    className={`w-full text-left p-3.5 rounded-xl border transition-all duration-200 flex items-start gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue cursor-pointer ${
                       isSelected
-                        ? 'bg-blue-50/70 border-emiqen-blue/70 shadow-sm ring-1 ring-emiqen-blue/30'
-                        : 'bg-white hover:bg-slate-50 border-slate-200/80'
+                        ? 'bg-blue-50/70 border-emiqen-blue/70 shadow-sm ring-1 ring-emiqen-blue/30 -translate-y-0.5'
+                        : 'bg-white hover:bg-slate-50/90 border-slate-200/80 hover:border-emiqen-blue/40 hover:-translate-y-0.5 hover:shadow-xs active:translate-y-0 active:scale-[0.99]'
                     }`}
                   >
                     <div
@@ -469,16 +469,16 @@ export const VoiceAgentsTab: React.FC<VoiceAgentsTabProps> = ({ availableVoices 
               <button
                 type="button"
                 onClick={handleStartSpeaking}
-                className="w-full py-3 px-4 rounded-xl text-xs font-bold text-white bg-emiqen-blue hover:bg-emiqen-blue-hover active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue"
+                className="group w-full py-3 px-4 rounded-xl text-xs font-bold text-white bg-emiqen-blue hover:bg-emiqen-blue-hover hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emiqen-blue/25 active:translate-y-0 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue cursor-pointer"
               >
-                <Mic className="w-4 h-4" />
+                <Mic className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
                 <span>Start Speaking</span>
               </button>
             ) : (
               <button
                 type="button"
                 onClick={stopSession}
-                className="w-full py-3 px-4 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                className="w-full py-3 px-4 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 hover:-translate-y-0.5 hover:shadow-md hover:shadow-rose-600/25 active:translate-y-0 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 cursor-pointer"
               >
                 <Square className="w-4 h-4 fill-white" />
                 <span>End Voice Session</span>
@@ -522,7 +522,7 @@ export const VoiceAgentsTab: React.FC<VoiceAgentsTabProps> = ({ availableVoices 
                       <span>{turn.time}</span>
                     </div>
                     <div
-                      className={`max-w-[90%] p-3 rounded-2xl text-xs leading-relaxed ${
+                      className={`max-w-[90%] p-3 rounded-2xl text-xs leading-relaxed transition-all duration-150 hover:shadow-2xs ${
                         isAgent
                           ? 'bg-blue-50/80 text-slate-800 border border-blue-100/90 rounded-tl-sm'
                           : 'bg-white text-slate-800 border border-slate-200 shadow-2xs rounded-tr-sm'
@@ -541,9 +541,9 @@ export const VoiceAgentsTab: React.FC<VoiceAgentsTabProps> = ({ availableVoices 
             <button
               type="button"
               onClick={() => setIsModalOpen(true)}
-              className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-emiqen-navy bg-slate-100 hover:bg-slate-200/80 border border-slate-200 transition-all flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue"
+              className="group w-full py-2.5 px-4 rounded-xl text-xs font-bold text-emiqen-navy bg-slate-100 hover:bg-white hover:text-emiqen-blue border border-slate-200 hover:border-emiqen-blue/40 hover:-translate-y-0.5 hover:shadow-sm active:translate-y-0 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue cursor-pointer"
             >
-              <Plus className="w-3.5 h-3.5 text-emiqen-blue" />
+              <Plus className="w-3.5 h-3.5 text-emiqen-blue transition-transform duration-200 group-hover:rotate-90" />
               <span>Build Your Own Agent</span>
             </button>
             <p className="text-[10px] text-slate-400 text-center">

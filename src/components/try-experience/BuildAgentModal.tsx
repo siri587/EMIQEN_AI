@@ -124,7 +124,7 @@ export const BuildAgentModal: React.FC<BuildAgentModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue"
+            className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 active:scale-90 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue cursor-pointer"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -269,14 +269,14 @@ export const BuildAgentModal: React.FC<BuildAgentModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
+              className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-emiqen-navy hover:bg-slate-100 active:scale-95 rounded-xl transition-all duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2 text-xs font-semibold text-white bg-emiqen-blue hover:bg-emiqen-blue-hover rounded-xl shadow-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue flex items-center gap-1.5"
+              className="px-5 py-2 text-xs font-semibold text-white bg-emiqen-blue hover:bg-emiqen-blue-hover hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emiqen-blue/20 active:translate-y-0 active:scale-[0.98] rounded-xl shadow-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emiqen-blue flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
             >
               {isSaving ? (
                 <>

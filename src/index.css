@@ -29,6 +29,54 @@
   }
 }
 
+@layer components {
+  /* Primary CTA Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center font-semibold text-white bg-emiqen-blue rounded-xl shadow-sm transition-all duration-200 ease-out select-none cursor-pointer;
+  }
+  .btn-primary:hover {
+    @apply bg-emiqen-blue-hover -translate-y-0.5 shadow-lg shadow-emiqen-blue/20;
+  }
+  .btn-primary:active {
+    @apply translate-y-0 scale-[0.98] shadow-sm;
+  }
+  .btn-primary:focus-visible {
+    @apply outline-none ring-2 ring-emiqen-blue ring-offset-2;
+  }
+  .btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed transform-none shadow-none pointer-events-none;
+  }
+
+  /* Secondary / Outline Buttons */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center font-semibold text-emiqen-navy bg-white hover:bg-slate-50 border border-slate-200 hover:border-emiqen-blue/40 rounded-xl shadow-sm transition-all duration-200 ease-out select-none cursor-pointer;
+  }
+  .btn-secondary:hover {
+    @apply -translate-y-0.5 text-emiqen-blue shadow-md;
+  }
+  .btn-secondary:active {
+    @apply translate-y-0 scale-[0.98] shadow-xs;
+  }
+  .btn-secondary:focus-visible {
+    @apply outline-none ring-2 ring-emiqen-blue ring-offset-2;
+  }
+
+  /* Interactive Cards */
+  .interactive-card {
+    @apply transition-all duration-200 ease-out border border-slate-200/80 hover:border-emiqen-blue/40 hover:-translate-y-0.5 hover:shadow-md hover:shadow-emiqen-blue/5;
+  }
+
+  /* Interactive Icon Buttons */
+  .btn-icon {
+    @apply p-2 rounded-xl text-slate-500 hover:text-emiqen-blue hover:bg-blue-50/70 active:scale-95 transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue;
+  }
+
+  /* Form Input Focus */
+  .form-input-focus {
+    @apply transition-all duration-200 ease-out border-slate-200 focus:border-emiqen-blue focus:ring-2 focus:ring-emiqen-blue/20 outline-none;
+  }
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
