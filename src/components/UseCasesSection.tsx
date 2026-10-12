@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { siteContent } from '../data/siteContent';
 import {
   Users,
@@ -8,7 +8,10 @@ import {
   Info,
   Mic,
   AlignLeft,
+  Volume2,
+  Pause,
 } from 'lucide-react';
+import { WaveformVisualizer, WaveformState } from './WaveformVisualizer';
 
 const USE_CASE_ICONS = {
   'customer-interaction': Users,
@@ -19,6 +22,67 @@ const USE_CASE_ICONS = {
 
 export const UseCasesSection: React.FC = () => {
   const { useCases } = siteContent;
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const [audioState, setAudioState] = useState<WaveformState>('idle');
+
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const handleSpeakSample = (id: string, text: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+
+    if (playingId === id && (audioState === 'playing' || audioState === 'processing')) {
+      window.speechSynthesis.cancel();
+      setPlayingId(null);
+      setAudioState('idle');
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    setPlayingId(id);
+    setAudioState('processing');
+
+    setTimeout(() => {
+      try {
+        const utterance = new SpeechSynthesisUtterance(text);
+        const synth = window.speechSynthesis;
+        const voices = synth.getVoices();
+        const preferredVoice =
+          voices.find((v) => v.lang === 'en-IN' || v.name.toLowerCase().includes('india')) ||
+          voices.find((v) => v.lang.startsWith('en'));
+
+        if (preferredVoice) utterance.voice = preferredVoice;
+        utterance.rate = 0.98;
+
+        utterance.onstart = () => {
+          setAudioState('playing');
+        };
+
+        utterance.onend = () => {
+          setAudioState('completed');
+          setTimeout(() => {
+            setPlayingId(null);
+            setAudioState('idle');
+          }, 800);
+        };
+
+        utterance.onerror = () => {
+          setAudioState('idle');
+          setPlayingId(null);
+        };
+
+        synth.speak(utterance);
+      } catch {
+        setAudioState('idle');
+        setPlayingId(null);
+      }
+    }, 150);
+  };
 
   return (
     <section id="use-cases" className="py-20 md:py-28 bg-transparent border-t border-slate-200/70 scroll-mt-20 relative">
@@ -86,14 +150,42 @@ export const UseCasesSection: React.FC = () => {
 
                 {/* Illustrative Query Block */}
                 <div className="pt-4 border-t border-slate-100 space-y-2">
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 font-semibold uppercase tracking-wider">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 font-semibold uppercase tracking-wider flex-wrap gap-1">
                     <span>Illustrative Sample Query</span>
                     <span className="text-slate-500 font-normal">
                       Focus: {item.focusArea}
                     </span>
                   </div>
-                  <div className="rounded-xl bg-slate-50 border border-slate-200/70 p-3.5 text-xs text-slate-700 italic font-mono leading-relaxed">
-                    {item.sampleInput}
+                  <div className="rounded-xl bg-slate-50 border border-slate-200/70 p-3.5 text-xs text-slate-700 italic font-mono leading-relaxed flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <span className="flex-1">{item.sampleInput}</span>
+                    {item.inputMode.includes('Voice') && (
+                      <button
+                        type="button"
+                        onClick={() => handleSpeakSample(item.id, item.sampleInput)}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all border shrink-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emiqen-blue ${
+                          playingId === item.id && audioState === 'playing'
+                            ? 'bg-emiqen-blue text-white border-emiqen-blue shadow-xs'
+                            : 'bg-white text-slate-700 hover:text-emiqen-blue hover:bg-slate-50 border-slate-200/80'
+                        }`}
+                        aria-label={`Listen to sample query for ${item.title}`}
+                        title="Listen to sample audio interaction"
+                      >
+                        {playingId === item.id && audioState === 'playing' ? (
+                          <Pause className="w-3 h-3 text-emiqen-cyan" />
+                        ) : (
+                          <Volume2 className="w-3 h-3 text-emiqen-blue" />
+                        )}
+                        <span className="text-[11px]">
+                          {playingId === item.id && audioState === 'playing' ? 'Playing' : 'Listen'}
+                        </span>
+                        <WaveformVisualizer
+                          state={playingId === item.id ? audioState : 'idle'}
+                          barCount={5}
+                          size="xs"
+                          colorVariant={playingId === item.id && audioState === 'playing' ? 'cyan' : 'brand'}
+                        />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

@@ -7,6 +7,17 @@ const STEP_ICONS = [MessageSquareText, Cpu, Sparkles, Send];
 export const WorkflowSection: React.FC = () => {
   const { workflow } = siteContent;
 
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const el = document.querySelector(href);
+    if (el) {
+      const navOffset = 80;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="how-it-works" className="py-20 md:py-28 bg-transparent border-t border-slate-200/70 scroll-mt-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,7 +99,8 @@ export const WorkflowSection: React.FC = () => {
             </div>
             <a
               href="#use-cases"
-              className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold transition-colors"
+              onClick={(e) => scrollToSection(e, '#use-cases')}
+              className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-cyan"
             >
               <span>View Practical Scenarios</span>
               <ArrowRight className="w-3.5 h-3.5" />

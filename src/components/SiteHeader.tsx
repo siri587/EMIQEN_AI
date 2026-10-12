@@ -109,6 +109,10 @@ export const SiteHeader: React.FC = () => {
     e.preventDefault();
     setMobileMenuOpen(false);
     setActiveDropdown(null);
+    if (window.location.pathname !== '/') {
+      window.location.href = '/' + href;
+      return;
+    }
     const targetElement = document.querySelector(href);
     if (targetElement) {
       const navOffset = 80;
@@ -130,14 +134,17 @@ export const SiteHeader: React.FC = () => {
         <div className="flex items-center justify-between" ref={dropdownRef}>
           
           {/* Logo with clearspace */}
-          <a
-            href="/"
-            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          <Link
+            to="/"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
             className="flex items-center group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue rounded-lg flex-shrink-0"
             aria-label="EMIQEN Home"
           >
             <BrandLogo variant="full" iconSize={36} />
-          </a>
+          </Link>
 
           {/* Desktop Navigation (Sarvam AI style with dropdown menus) */}
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2" aria-label="Main Navigation">

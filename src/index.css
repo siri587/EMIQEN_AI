@@ -39,33 +39,120 @@
   }
 }
 
-/* Custom subtle waveform animations */
-@keyframes wavePulse {
+/* ============================================================
+   EMIQEN Waveform Animations
+   States: Idle, Processing, Playing, Paused, Completed, Error
+   Colors: Royal Blue (#1769F8), Cyan (#00D4E8), Violet (#6D28D9)
+   ============================================================ */
+
+@keyframes waveformIdle {
   0%, 100% {
-    transform: scaleY(0.4);
-    opacity: 0.7;
+    transform: scaleY(0.25);
+    opacity: 0.65;
   }
   50% {
-    transform: scaleY(1);
-    opacity: 1;
+    transform: scaleY(0.48);
+    opacity: 0.9;
   }
 }
 
-.animate-wave-1 {
-  animation: wavePulse 1.4s ease-in-out infinite;
+@keyframes waveformActiveA {
+  0%, 100% {
+    transform: scaleY(0.3);
+  }
+  25% {
+    transform: scaleY(0.85);
+  }
+  50% {
+    transform: scaleY(0.45);
+  }
+  75% {
+    transform: scaleY(1);
+  }
 }
-.animate-wave-2 {
-  animation: wavePulse 1.2s ease-in-out infinite 0.2s;
+
+@keyframes waveformActiveB {
+  0%, 100% {
+    transform: scaleY(0.4);
+  }
+  30% {
+    transform: scaleY(0.95);
+  }
+  60% {
+    transform: scaleY(0.35);
+  }
+  85% {
+    transform: scaleY(0.8);
+  }
 }
-.animate-wave-3 {
-  animation: wavePulse 1.6s ease-in-out infinite 0.4s;
+
+@keyframes waveformActiveC {
+  0%, 100% {
+    transform: scaleY(0.25);
+  }
+  20% {
+    transform: scaleY(0.7);
+  }
+  55% {
+    transform: scaleY(1);
+  }
+  80% {
+    transform: scaleY(0.5);
+  }
 }
-.animate-wave-4 {
-  animation: wavePulse 1.3s ease-in-out infinite 0.1s;
+
+@keyframes waveformProcessing {
+  0% {
+    transform: scaleY(0.3);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(0.9);
+    opacity: 1;
+    filter: drop-shadow(0 0 4px rgba(0, 212, 232, 0.6));
+  }
+  100% {
+    transform: scaleY(0.3);
+    opacity: 0.4;
+  }
 }
-.animate-wave-5 {
-  animation: wavePulse 1.5s ease-in-out infinite 0.3s;
-}
+
+/* Individual Bar Playing Animations with Staggered Organic Frequencies */
+.animate-wave-bar-1 { animation: waveformActiveA 1.15s ease-in-out infinite 0.05s; transform-origin: bottom; }
+.animate-wave-bar-2 { animation: waveformActiveB 0.95s ease-in-out infinite 0.18s; transform-origin: bottom; }
+.animate-wave-bar-3 { animation: waveformActiveC 1.35s ease-in-out infinite 0.10s; transform-origin: bottom; }
+.animate-wave-bar-4 { animation: waveformActiveA 1.05s ease-in-out infinite 0.28s; transform-origin: bottom; }
+.animate-wave-bar-5 { animation: waveformActiveB 1.25s ease-in-out infinite 0.15s; transform-origin: bottom; }
+.animate-wave-bar-6 { animation: waveformActiveC 0.90s ease-in-out infinite 0.22s; transform-origin: bottom; }
+.animate-wave-bar-7 { animation: waveformActiveA 1.30s ease-in-out infinite 0.08s; transform-origin: bottom; }
+.animate-wave-bar-8 { animation: waveformActiveB 1.10s ease-in-out infinite 0.25s; transform-origin: bottom; }
+
+/* Waveform Idle Breathing */
+.animate-wave-idle-1 { animation: waveformIdle 2.2s ease-in-out infinite 0s; transform-origin: bottom; }
+.animate-wave-idle-2 { animation: waveformIdle 2.2s ease-in-out infinite 0.2s; transform-origin: bottom; }
+.animate-wave-idle-3 { animation: waveformIdle 2.2s ease-in-out infinite 0.4s; transform-origin: bottom; }
+.animate-wave-idle-4 { animation: waveformIdle 2.2s ease-in-out infinite 0.1s; transform-origin: bottom; }
+.animate-wave-idle-5 { animation: waveformIdle 2.2s ease-in-out infinite 0.3s; transform-origin: bottom; }
+.animate-wave-idle-6 { animation: waveformIdle 2.2s ease-in-out infinite 0.5s; transform-origin: bottom; }
+.animate-wave-idle-7 { animation: waveformIdle 2.2s ease-in-out infinite 0.15s; transform-origin: bottom; }
+.animate-wave-idle-8 { animation: waveformIdle 2.2s ease-in-out infinite 0.35s; transform-origin: bottom; }
+
+/* Waveform Processing Traveling Pulse */
+.animate-wave-proc-1 { animation: waveformProcessing 0.85s ease-in-out infinite 0.00s; transform-origin: bottom; }
+.animate-wave-proc-2 { animation: waveformProcessing 0.85s ease-in-out infinite 0.10s; transform-origin: bottom; }
+.animate-wave-proc-3 { animation: waveformProcessing 0.85s ease-in-out infinite 0.20s; transform-origin: bottom; }
+.animate-wave-proc-4 { animation: waveformProcessing 0.85s ease-in-out infinite 0.30s; transform-origin: bottom; }
+.animate-wave-proc-5 { animation: waveformProcessing 0.85s ease-in-out infinite 0.40s; transform-origin: bottom; }
+.animate-wave-proc-6 { animation: waveformProcessing 0.85s ease-in-out infinite 0.50s; transform-origin: bottom; }
+.animate-wave-proc-7 { animation: waveformProcessing 0.85s ease-in-out infinite 0.60s; transform-origin: bottom; }
+.animate-wave-proc-8 { animation: waveformProcessing 0.85s ease-in-out infinite 0.70s; transform-origin: bottom; }
+
+/* Backwards compatibility for existing wave classes */
+.animate-wave-1 { animation: waveformActiveA 1.15s ease-in-out infinite 0.05s; transform-origin: bottom; }
+.animate-wave-2 { animation: waveformActiveB 0.95s ease-in-out infinite 0.18s; transform-origin: bottom; }
+.animate-wave-3 { animation: waveformActiveC 1.35s ease-in-out infinite 0.10s; transform-origin: bottom; }
+.animate-wave-4 { animation: waveformActiveA 1.05s ease-in-out infinite 0.28s; transform-origin: bottom; }
+.animate-wave-5 { animation: waveformActiveB 1.25s ease-in-out infinite 0.15s; transform-origin: bottom; }
 
 /* Glass & Glow utilities */
 .glass-panel {

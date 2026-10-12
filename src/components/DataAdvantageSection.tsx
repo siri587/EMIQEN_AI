@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BookOpen,
   GitMerge,
@@ -10,7 +10,10 @@ import {
   Target,
   Sparkles,
   TrendingUp,
+  Volume2,
+  Pause,
 } from 'lucide-react';
+import { WaveformVisualizer, WaveformState } from './WaveformVisualizer';
 
 interface VocabExample {
   input: string;
@@ -110,6 +113,69 @@ const PIPELINE_STEPS = [
 ];
 
 export const DataAdvantageSection: React.FC = () => {
+  const [playingIdx, setPlayingIdx] = useState<number | null>(null);
+  const [rowState, setRowState] = useState<WaveformState>('idle');
+
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const handleSpeakExample = (idx: number, outputText: string, noteText: string) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+
+    if (playingIdx === idx && (rowState === 'playing' || rowState === 'processing')) {
+      window.speechSynthesis.cancel();
+      setPlayingIdx(null);
+      setRowState('idle');
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    setPlayingIdx(idx);
+    setRowState('processing');
+
+    setTimeout(() => {
+      try {
+        const textToSpeak = `${outputText}. ${noteText}`;
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        const synth = window.speechSynthesis;
+        const voices = synth.getVoices();
+        const preferredVoice =
+          voices.find((v) => v.lang === 'en-IN' || v.name.toLowerCase().includes('india')) ||
+          voices.find((v) => v.lang.startsWith('en'));
+
+        if (preferredVoice) utterance.voice = preferredVoice;
+        utterance.rate = 0.95;
+
+        utterance.onstart = () => {
+          setRowState('playing');
+        };
+
+        utterance.onend = () => {
+          setRowState('completed');
+          setTimeout(() => {
+            setPlayingIdx(null);
+            setRowState('idle');
+          }, 800);
+        };
+
+        utterance.onerror = () => {
+          setRowState('idle');
+          setPlayingIdx(null);
+        };
+
+        synth.speak(utterance);
+      } catch {
+        setRowState('idle');
+        setPlayingIdx(null);
+      }
+    }, 150);
+  };
+
   return (
     <section
       id="data-advantage"
@@ -176,7 +242,7 @@ export const DataAdvantageSection: React.FC = () => {
             </div>
             <div className="bg-slate-50 px-6 py-3 text-xs font-semibold text-emiqen-blue uppercase tracking-wider flex items-center gap-1.5">
               <ArrowRight className="w-3.5 h-3.5" />
-              Indian-Context Alternative
+              Indian-Context Alternative (Voice Preview)
             </div>
           </div>
 
@@ -193,10 +259,38 @@ export const DataAdvantageSection: React.FC = () => {
                 <span className="text-sm font-medium text-slate-700 font-mono">{ex.input}</span>
               </div>
               <div className="bg-white px-6 py-4">
-                <div className="flex items-start gap-2">
-                  <span className="text-sm font-semibold text-emiqen-navy font-mono mt-0.5">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <span className="text-sm font-semibold text-emiqen-navy font-mono">
                     {ex.output}
                   </span>
+
+                  {/* Audio Listen Button with Waveform */}
+                  <button
+                    type="button"
+                    onClick={() => handleSpeakExample(idx, ex.output, ex.note)}
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emiqen-blue ${
+                      playingIdx === idx && rowState === 'playing'
+                        ? 'bg-emiqen-blue text-white border-emiqen-blue shadow-xs'
+                        : 'bg-slate-50 text-slate-700 hover:text-emiqen-blue hover:bg-white border-slate-200/80'
+                    }`}
+                    aria-label={`Listen pronunciation for ${ex.output}`}
+                    title={`Hear Indian-context pronunciation: ${ex.output}`}
+                  >
+                    {playingIdx === idx && rowState === 'playing' ? (
+                      <Pause className="w-3 h-3 text-emiqen-cyan" />
+                    ) : (
+                      <Volume2 className="w-3 h-3 text-emiqen-blue" />
+                    )}
+                    <span className="text-[11px]">
+                      {playingIdx === idx && rowState === 'playing' ? 'Playing' : 'Listen'}
+                    </span>
+                    <WaveformVisualizer
+                      state={playingIdx === idx ? rowState : 'idle'}
+                      barCount={5}
+                      size="xs"
+                      colorVariant={playingIdx === idx && rowState === 'playing' ? 'cyan' : 'brand'}
+                    />
+                  </button>
                 </div>
                 <p className="text-[11px] text-slate-400 mt-1 italic">{ex.note}</p>
               </div>

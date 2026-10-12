@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { BrandLogo } from './BrandLogo';
 import { siteContent } from '../data/siteContent';
 import { ArrowUp } from 'lucide-react';
@@ -12,6 +13,10 @@ export const SiteFooter: React.FC = () => {
 
   const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
+    if (window.location.pathname !== '/') {
+      window.location.href = '/' + href;
+      return;
+    }
     const el = document.querySelector(href);
     if (el) {
       const navOffset = 80;
@@ -27,7 +32,14 @@ export const SiteFooter: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
           {/* Brand Info (2 cols on large screen) */}
           <div className="lg:col-span-2 space-y-4">
-            <BrandLogo variant="full" theme="dark" iconSize={36} />
+            <Link
+              to="/"
+              onClick={scrollToTop}
+              className="inline-block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-cyan rounded-lg"
+              aria-label="EMIQEN Home"
+            >
+              <BrandLogo variant="full" theme="dark" iconSize={36} />
+            </Link>
 
             <p className="text-sm font-medium text-slate-300">
               {siteContent.footer.brandDescriptor}

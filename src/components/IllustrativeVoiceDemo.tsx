@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
-import { Mic, Volume2, Sparkles, CheckCircle2, Sliders, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Mic, Volume2, Sparkles, CheckCircle2, Sliders, ChevronRight, 
+  Play, Pause, RotateCcw, Loader2, Copy, Check 
+} from 'lucide-react';
+import { WaveformVisualizer, WaveformState } from './WaveformVisualizer';
 
 interface Scenario {
   id: string;
@@ -12,6 +16,7 @@ interface Scenario {
   emotionTone: string;
   systemResponse: string;
   audioDuration: string;
+  durationSeconds: number;
 }
 
 const DEMO_SCENARIOS: Scenario[] = [
@@ -27,6 +32,7 @@ const DEMO_SCENARIOS: Scenario[] = [
     systemResponse:
       'Understood. Requesting calendar adjustment to prepone the regional compliance review from Friday to Thursday, 2:30 PM IST. Notifying participating audit leads for confirmation.',
     audioDuration: '0:06',
+    durationSeconds: 6,
   },
   {
     id: 'field-dispatch',
@@ -40,6 +46,7 @@ const DEMO_SCENARIOS: Scenario[] = [
     systemResponse:
       'Recorded consignment #402 delivery at Whitefield Hub, Gate 3. Timestamped and logged into the active dispatch ledger.',
     audioDuration: '0:05',
+    durationSeconds: 5,
   },
   {
     id: 'document-query',
@@ -53,24 +60,200 @@ const DEMO_SCENARIOS: Scenario[] = [
     systemResponse:
       'Per current operational guidelines (Section 4.2), branch conveyance up to ₹5,000 per instance requires branch manager approval. Amounts exceeding this threshold require zonal sign-off.',
     audioDuration: '0:08',
+    durationSeconds: 8,
   },
 ];
 
 export const IllustrativeVoiceDemo: React.FC = () => {
   const [activeScenario, setActiveScenario] = useState<Scenario>(DEMO_SCENARIOS[0]);
-  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
+  const [waveformState, setWaveformState] = useState<WaveformState>('idle');
+  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [copied, setCopied] = useState<boolean>(false);
 
-  const toggleAudio = () => {
-    setIsPlayingAudio((prev) => !prev);
-    // Auto reset after 3 seconds for illustrative visual feel
-    if (!isPlayingAudio) {
-      setTimeout(() => setIsPlayingAudio(false), 3500);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const timerRef = useRef<number | null>(null);
+
+  // Stop any active speech and timer
+  const stopAudio = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    if (timerRef.current !== null) {
+      window.clearInterval(timerRef.current);
+      timerRef.current = null;
     }
   };
 
+  // Clean up on unmount or scenario change
+  useEffect(() => {
+    return () => {
+      stopAudio();
+    };
+  }, []);
+
+  // Handle switching scenario tabs
+  const handleScenarioChange = (scenario: Scenario) => {
+    stopAudio();
+    setActiveScenario(scenario);
+    setWaveformState('idle');
+    setElapsedSeconds(0);
+    setErrorMessage('');
+  };
+
+  // Start speech synthesis playback
+  const handlePlayAudio = () => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      setWaveformState('error');
+      setErrorMessage('SpeechSynthesis not supported');
+      return;
+    }
+
+    // Toggle pause if already playing
+    if (waveformState === 'playing') {
+      window.speechSynthesis.pause();
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      setWaveformState('paused');
+      return;
+    }
+
+    // Toggle resume if paused
+    if (waveformState === 'paused') {
+      window.speechSynthesis.resume();
+      setWaveformState('playing');
+      timerRef.current = window.setInterval(() => {
+        setElapsedSeconds((prev) => {
+          if (prev >= activeScenario.durationSeconds) {
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+      return;
+    }
+
+    // New playback session: first enter processing state for natural feel
+    stopAudio();
+    setWaveformState('processing');
+    setElapsedSeconds(0);
+    setErrorMessage('');
+
+    setTimeout(() => {
+      try {
+        const synth = window.speechSynthesis;
+        synth.cancel(); // ensure clear state
+
+        const utterance = new SpeechSynthesisUtterance(activeScenario.systemResponse);
+        utteranceRef.current = utterance;
+
+        // Try to pick an Indian English voice if available, or natural English
+        const voices = synth.getVoices();
+        const preferredVoice =
+          voices.find((v) => v.lang === 'en-IN' || v.name.toLowerCase().includes('india')) ||
+          voices.find((v) => v.lang.startsWith('en'));
+
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+
+        utterance.rate = 0.98; // enterprise cadence
+        utterance.pitch = 1.0;
+
+        utterance.onstart = () => {
+          setWaveformState('playing');
+          if (timerRef.current !== null) window.clearInterval(timerRef.current);
+          timerRef.current = window.setInterval(() => {
+            setElapsedSeconds((prev) => {
+              if (prev + 1 >= activeScenario.durationSeconds) {
+                return activeScenario.durationSeconds;
+              }
+              return prev + 1;
+            });
+          }, 1000);
+        };
+
+        utterance.onpause = () => {
+          setWaveformState('paused');
+          if (timerRef.current !== null) {
+            window.clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
+        };
+
+        utterance.onresume = () => {
+          setWaveformState('playing');
+        };
+
+        utterance.onend = () => {
+          if (timerRef.current !== null) {
+            window.clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
+          setWaveformState('completed');
+          setElapsedSeconds(activeScenario.durationSeconds);
+          // Return gently to idle after 1.8 seconds
+          setTimeout(() => {
+            setWaveformState('idle');
+            setElapsedSeconds(0);
+          }, 1800);
+        };
+
+        utterance.onerror = (e) => {
+          if (timerRef.current !== null) {
+            window.clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
+          // Only flag as error if not a deliberate cancel
+          if (e.error !== 'canceled' && e.error !== 'interrupted') {
+            setWaveformState('error');
+            setErrorMessage('Playback interrupted');
+          } else {
+            setWaveformState('idle');
+          }
+        };
+
+        synth.speak(utterance);
+      } catch (err) {
+        setWaveformState('error');
+        setErrorMessage('Speech failed to start');
+      }
+    }, 280);
+  };
+
+  // Copy response text
+  const handleCopyResponse = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(activeScenario.systemResponse);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  // Smooth scroll to Workflow/Pipeline section
+  const handleScrollToPipeline = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.querySelector('#how-it-works');
+    if (el) {
+      const navOffset = 80;
+      const elementPosition = el.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    }
+  };
+
+  // Format progress time
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
   return (
-    <div className="relative w-full rounded-2xl border border-emiqen-soft-border/80 bg-white/95 shadow-elevated backdrop-blur-md overflow-hidden">
-      {/* Top Banner Notice - Mandatory Illustrative Prototype Disclaimer */}
+    <div className="relative w-full rounded-2xl border border-slate-200/90 bg-white/95 shadow-elevated backdrop-blur-md overflow-hidden">
+      {/* Top Banner Notice - Illustrative Prototype Disclaimer */}
       <div className="bg-gradient-to-r from-emiqen-navy via-emiqen-navy-light to-emiqen-navy px-4 py-2.5 text-xs text-white/90 flex flex-wrap items-center justify-between gap-2 border-b border-emiqen-blue/20">
         <div className="flex items-center gap-2">
           <span className="flex h-2 w-2 rounded-full bg-emiqen-cyan animate-pulse" />
@@ -88,17 +271,21 @@ export const IllustrativeVoiceDemo: React.FC = () => {
       </div>
 
       {/* Scenario Tabs */}
-      <div className="flex border-b border-slate-100 bg-slate-50/70 p-1.5 gap-1.5 overflow-x-auto text-xs">
+      <div 
+        className="flex border-b border-slate-100 bg-slate-50/70 p-1.5 gap-1.5 overflow-x-auto text-xs"
+        role="tablist"
+        aria-label="Demonstration Scenarios"
+      >
         {DEMO_SCENARIOS.map((scenario) => {
           const isActive = scenario.id === activeScenario.id;
           return (
             <button
               key={scenario.id}
-              onClick={() => {
-                setActiveScenario(scenario);
-                setIsPlayingAudio(false);
-              }}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-all whitespace-nowrap text-left ${
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={`scenario-panel-${scenario.id}`}
+              onClick={() => handleScenarioChange(scenario)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-all whitespace-nowrap text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue ${
                 isActive
                   ? 'bg-white text-emiqen-navy shadow-sm border border-slate-200/80 font-semibold'
                   : 'text-slate-600 hover:text-emiqen-navy hover:bg-white/50'
@@ -117,7 +304,11 @@ export const IllustrativeVoiceDemo: React.FC = () => {
       </div>
 
       {/* Main Console Body */}
-      <div className="p-5 sm:p-6 space-y-5">
+      <div 
+        className="p-5 sm:p-6 space-y-5"
+        id={`scenario-panel-${activeScenario.id}`}
+        role="tabpanel"
+      >
         {/* User Input Stage */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs text-slate-500">
@@ -209,10 +400,31 @@ export const IllustrativeVoiceDemo: React.FC = () => {
               </span>
               Task-Focused Output (Text & Voice)
             </span>
-            <span className="text-[11px] text-emerald-700 font-medium flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              Structured Response
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleCopyResponse}
+                className="text-[11px] text-slate-500 hover:text-emiqen-blue flex items-center gap-1 transition-colors px-2 py-0.5 rounded hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emiqen-blue"
+                title="Copy response text"
+                aria-label="Copy response text"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3 h-3 text-emerald-600" />
+                    <span className="text-emerald-600 font-medium">Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
+              <span className="text-[11px] text-emerald-700 font-medium flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                Structured Response
+              </span>
+            </div>
           </div>
 
           <div className="rounded-xl border border-emiqen-soft-border bg-white p-4 space-y-3 shadow-sm">
@@ -220,58 +432,91 @@ export const IllustrativeVoiceDemo: React.FC = () => {
               {activeScenario.systemResponse}
             </p>
 
-            {/* Illustrative Voice Synthesis Bar */}
+            {/* Voice Synthesis Interactive Audio Controller & Waveform */}
             <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2.5">
                 <button
                   type="button"
-                  onClick={toggleAudio}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emiqen-navy text-white text-xs font-semibold hover:bg-emiqen-blue transition-colors shadow-sm"
-                  aria-label="Toggle illustrative voice response simulation"
+                  onClick={handlePlayAudio}
+                  disabled={waveformState === 'processing'}
+                  className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 shadow-sm active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue ${
+                    waveformState === 'playing'
+                      ? 'bg-emiqen-blue text-white hover:bg-emiqen-blue-hover ring-2 ring-emiqen-cyan/50'
+                      : waveformState === 'paused'
+                      ? 'bg-amber-600 text-white hover:bg-amber-700'
+                      : waveformState === 'completed'
+                      ? 'bg-slate-800 text-white hover:bg-emiqen-blue'
+                      : 'bg-emiqen-navy text-white hover:bg-emiqen-blue'
+                  }`}
+                  aria-label={
+                    waveformState === 'playing'
+                      ? 'Pause spoken audio output'
+                      : waveformState === 'paused'
+                      ? 'Resume spoken audio output'
+                      : waveformState === 'completed'
+                      ? 'Replay spoken audio output'
+                      : 'Hear spoken audio output'
+                  }
                 >
-                  <Volume2 className="w-3.5 h-3.5 text-emiqen-cyan" />
-                  <span>{isPlayingAudio ? 'Playing Sample...' : 'Hear Spoken Output'}</span>
+                  {waveformState === 'processing' ? (
+                    <Loader2 className="w-3.5 h-3.5 text-emiqen-cyan animate-spin" />
+                  ) : waveformState === 'playing' ? (
+                    <Pause className="w-3.5 h-3.5 text-emiqen-cyan" />
+                  ) : waveformState === 'paused' ? (
+                    <Play className="w-3.5 h-3.5 text-white" />
+                  ) : waveformState === 'completed' ? (
+                    <RotateCcw className="w-3.5 h-3.5 text-emiqen-cyan" />
+                  ) : (
+                    <Volume2 className="w-3.5 h-3.5 text-emiqen-cyan" />
+                  )}
+
+                  <span>
+                    {waveformState === 'processing'
+                      ? 'Synthesizing...'
+                      : waveformState === 'playing'
+                      ? 'Pause Output'
+                      : waveformState === 'paused'
+                      ? 'Resume Output'
+                      : waveformState === 'completed'
+                      ? 'Replay Spoken Output'
+                      : 'Hear Spoken Output'}
+                  </span>
                 </button>
-                <span className="text-xs font-mono text-slate-400">
-                  {isPlayingAudio ? '0:03' : activeScenario.audioDuration}
-                </span>
+
+                {/* Progress & Duration Indicator */}
+                <div className="flex items-center gap-1.5 text-xs font-mono text-slate-500">
+                  {waveformState === 'playing' ? (
+                    <span>
+                      {formatTime(elapsedSeconds)} / {activeScenario.audioDuration}
+                    </span>
+                  ) : waveformState === 'paused' ? (
+                    <span className="text-amber-600 font-medium">
+                      Paused · {formatTime(elapsedSeconds)} / {activeScenario.audioDuration}
+                    </span>
+                  ) : waveformState === 'completed' ? (
+                    <span className="text-emerald-600 font-medium">
+                      {activeScenario.audioDuration} (Done)
+                    </span>
+                  ) : (
+                    <span>{activeScenario.audioDuration}</span>
+                  )}
+                </div>
               </div>
 
-              {/* Animated or Static Soundwave Visualizer */}
-              <div
-                className="flex items-center gap-1 h-6 px-2.5 py-1 rounded bg-slate-50 border border-slate-200/60"
-                aria-hidden="true"
-              >
+              {/* Animated Live Waveform Visualizer */}
+              <div className="flex items-center gap-2">
                 <div
-                  className={`w-1 rounded-full bg-emiqen-blue transition-all duration-300 ${
-                    isPlayingAudio ? 'h-5 animate-wave-1' : 'h-2'
-                  }`}
-                />
-                <div
-                  className={`w-1 rounded-full bg-emiqen-cyan transition-all duration-300 ${
-                    isPlayingAudio ? 'h-4 animate-wave-2' : 'h-3'
-                  }`}
-                />
-                <div
-                  className={`w-1 rounded-full bg-emiqen-violet transition-all duration-300 ${
-                    isPlayingAudio ? 'h-6 animate-wave-3' : 'h-5'
-                  }`}
-                />
-                <div
-                  className={`w-1 rounded-full bg-emiqen-blue transition-all duration-300 ${
-                    isPlayingAudio ? 'h-4 animate-wave-4' : 'h-3'
-                  }`}
-                />
-                <div
-                  className={`w-1 rounded-full bg-emiqen-cyan transition-all duration-300 ${
-                    isPlayingAudio ? 'h-5 animate-wave-5' : 'h-2'
-                  }`}
-                />
-                <div
-                  className={`w-1 rounded-full bg-emiqen-violet transition-all duration-300 ${
-                    isPlayingAudio ? 'h-3 animate-wave-2' : 'h-1.5'
-                  }`}
-                />
+                  className="flex items-center h-7 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200/80"
+                  title={`Status: ${waveformState}`}
+                >
+                  <WaveformVisualizer
+                    state={waveformState}
+                    barCount={8}
+                    size="md"
+                    colorVariant="brand"
+                    errorMessage={errorMessage}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -282,7 +527,8 @@ export const IllustrativeVoiceDemo: React.FC = () => {
           <span>Demonstrating planned modular integration</span>
           <a
             href="#how-it-works"
-            className="text-emiqen-blue hover:text-emiqen-blue-hover font-semibold inline-flex items-center gap-0.5"
+            onClick={handleScrollToPipeline}
+            className="text-emiqen-blue hover:text-emiqen-blue-hover font-semibold inline-flex items-center gap-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emiqen-blue rounded"
           >
             Explore pipeline architecture <ChevronRight className="w-3 h-3" />
           </a>
@@ -291,4 +537,3 @@ export const IllustrativeVoiceDemo: React.FC = () => {
     </div>
   );
 };
-

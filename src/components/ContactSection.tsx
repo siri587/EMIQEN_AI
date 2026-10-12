@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { siteContent } from '../data/siteContent';
-import { Mail, Send, CheckCircle2, AlertCircle, Info, ExternalLink } from 'lucide-react';
+import { Mail, Send, CheckCircle2, AlertCircle, Info, ExternalLink, Loader2, Copy, Check } from 'lucide-react';
 
 interface FormState {
   fullName: string;
@@ -33,6 +33,9 @@ export const ContactSection: React.FC = () => {
   const [submittedStatus, setSubmittedStatus] = useState<
     'idle' | 'configured-success' | 'unconfigured-ready'
   >('idle');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [copiedEmail, setCopiedEmail] = useState<boolean>(false);
+  const [copiedSummary, setCopiedSummary] = useState<boolean>(false);
 
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
@@ -59,15 +62,19 @@ export const ContactSection: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate() || isSubmitting) return;
 
-    if (contact.config.isBackendConfigured && contact.config.submissionEndpoint) {
-      // In production with backend, send to endpoint
-      setSubmittedStatus('configured-success');
-    } else {
-      // Explicit honest message as required: do not fake a successful server save when backend is unconfigured
-      setSubmittedStatus('unconfigured-ready');
-    }
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      if (contact.config.isBackendConfigured && contact.config.submissionEndpoint) {
+        // In production with backend, send to endpoint
+        setSubmittedStatus('configured-success');
+      } else {
+        // Explicit honest message as required: do not fake a successful server save when backend is unconfigured
+        setSubmittedStatus('unconfigured-ready');
+      }
+    }, 450);
   };
 
   const handleMailtoFallback = () => {
@@ -78,6 +85,23 @@ export const ContactSection: React.FC = () => {
       `Name: ${form.fullName}\nEmail: ${form.email}\nCompany: ${form.company}\nRole: ${form.role || 'Not specified'}\nInterest: ${form.interest}\n\nWorkflow Details:\n${form.message}\n`
     );
     window.location.href = `mailto:${contact.config.approvedContactEmail}?subject=${subject}&body=${body}`;
+  };
+
+  const handleCopyEmail = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(contact.config.approvedContactEmail);
+      setCopiedEmail(true);
+      setTimeout(() => setCopiedEmail(false), 2000);
+    }
+  };
+
+  const handleCopySummary = () => {
+    const summaryText = `Name: ${form.fullName}\nEmail: ${form.email}\nCompany: ${form.company}\nRole: ${form.role || 'Not specified'}\nInterest: ${form.interest}\n\nMessage:\n${form.message}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(summaryText);
+      setCopiedSummary(true);
+      setTimeout(() => setCopiedSummary(false), 2000);
+    }
   };
 
   return (
@@ -107,15 +131,35 @@ export const ContactSection: React.FC = () => {
               <p className="text-xs text-slate-600 leading-relaxed">
                 For pilot inquiries, enterprise briefings, and technical discussions regarding Indian-context language intelligence:
               </p>
-              <div className="p-3 bg-white rounded-xl border border-slate-200/80 flex items-center justify-between text-xs font-mono text-emiqen-navy">
+              <div className="p-3 bg-white rounded-xl border border-slate-200/80 flex items-center justify-between text-xs font-mono text-emiqen-navy flex-wrap gap-2">
                 <span className="font-semibold">{contact.config.approvedContactEmail}</span>
-                <button
-                  type="button"
-                  onClick={handleMailtoFallback}
-                  className="text-emiqen-blue hover:text-emiqen-blue-hover text-xs font-sans font-semibold inline-flex items-center gap-1"
-                >
-                  Send email <ExternalLink className="w-3 h-3" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCopyEmail}
+                    className="text-slate-600 hover:text-emiqen-blue text-xs font-sans font-medium inline-flex items-center gap-1 px-2 py-1 rounded hover:bg-slate-100 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emiqen-blue"
+                    title="Copy approved email address"
+                  >
+                    {copiedEmail ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-600 font-semibold">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleMailtoFallback}
+                    className="text-emiqen-blue hover:text-emiqen-blue-hover text-xs font-sans font-semibold inline-flex items-center gap-1 px-2 py-1 rounded hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emiqen-blue"
+                  >
+                    <span>Send email</span> <ExternalLink className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -158,15 +202,33 @@ export const ContactSection: React.FC = () => {
                     <button
                       type="button"
                       onClick={handleMailtoFallback}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emiqen-blue hover:bg-emiqen-blue-hover text-white text-sm font-semibold transition-colors shadow-sm"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emiqen-blue hover:bg-emiqen-blue-hover text-white text-sm font-semibold transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue"
                     >
                       <Mail className="w-4 h-4" />
                       <span>Dispatch via Email Client</span>
                     </button>
                     <button
                       type="button"
+                      onClick={handleCopySummary}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-sm font-semibold transition-colors shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue"
+                      title="Copy formatted inquiry to clipboard"
+                    >
+                      {copiedSummary ? (
+                        <>
+                          <Check className="w-4 h-4 text-emerald-600" />
+                          <span className="text-emerald-600">Copied to Clipboard</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4" />
+                          <span>Copy Summary</span>
+                        </>
+                      )}
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => setSubmittedStatus('idle')}
-                      className="w-full sm:w-auto px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium transition-colors"
+                      className="w-full sm:w-auto px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue"
                     >
                       Edit Details
                     </button>
@@ -367,10 +429,24 @@ export const ContactSection: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 px-6 rounded-xl font-semibold text-white bg-emiqen-blue hover:bg-emiqen-blue-hover active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-elevated"
+                    disabled={isSubmitting}
+                    className={`w-full py-3.5 px-6 rounded-xl font-semibold text-white transition-all flex items-center justify-center gap-2 shadow-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emiqen-blue ${
+                      isSubmitting
+                        ? 'bg-emiqen-blue/70 cursor-not-allowed'
+                        : 'bg-emiqen-blue hover:bg-emiqen-blue-hover active:scale-[0.99]'
+                    }`}
                   >
-                    <span>Talk to our team</span>
-                    <Send className="w-4 h-4" />
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin text-emiqen-cyan" />
+                        <span>Validating & Submitting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Talk to our team</span>
+                        <Send className="w-4 h-4" />
+                      </>
+                    )}
                   </button>
 
                   <div className="pt-2 text-center">
