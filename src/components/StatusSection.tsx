@@ -12,7 +12,7 @@ export const StatusSection: React.FC = () => {
   const { status } = siteContent;
 
   return (
-    <section id="status" className="py-20 md:py-28 bg-white border-t border-slate-100 scroll-mt-20">
+    <section id="status" className="py-20 md:py-28 bg-transparent border-t border-slate-200/70 scroll-mt-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
@@ -34,9 +34,9 @@ export const StatusSection: React.FC = () => {
           {status.principles.map((principle, idx) => (
             <div
               key={idx}
-              className="rounded-2xl border border-emiqen-soft-border bg-emiqen-soft-bg/30 p-6 flex flex-col justify-start"
+              className="rounded-2xl border border-slate-200/80 bg-white/85 backdrop-blur-md p-6 flex flex-col justify-start shadow-sm"
             >
-              <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-emiqen-blue mb-4 shadow-2xs">
+              <div className="w-10 h-10 rounded-xl bg-emiqen-soft-bg border border-slate-200 flex items-center justify-center text-emiqen-blue mb-4 shadow-2xs">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-bold text-emiqen-navy mb-2">
@@ -50,7 +50,7 @@ export const StatusSection: React.FC = () => {
         </div>
 
         {/* Active Milestones & Development Stages */}
-        <div className="rounded-2xl border border-slate-200/90 bg-white shadow-subtle p-6 sm:p-8">
+        <div className="rounded-2xl border border-slate-200/80 bg-white/90 backdrop-blur-md shadow-subtle p-6 sm:p-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-6 border-b border-slate-100 gap-2">
             <div>
               <h3 className="text-xl font-bold text-emiqen-navy">

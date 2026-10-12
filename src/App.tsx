@@ -22,16 +22,30 @@ import { DashboardPage } from './pages/DashboardPage';
 
 /** Full landing page */
 const LandingPage: React.FC = () => (
-  <div className="min-h-screen bg-[#FCFDFF] text-emiqen-navy flex flex-col font-sans selection:bg-emiqen-cyan/30 selection:text-emiqen-navy relative overflow-x-hidden">
-    {/* Global Ambient Background Grid & Subtle Radial Aura */}
-    <div 
-      className="fixed inset-0 pointer-events-none -z-10 bg-ai-grid [mask-image:radial-gradient(ellipse_85%_75%_at_50%_15%,#000_20%,transparent_100%)] opacity-75" 
-      aria-hidden="true" 
-    />
-    <div 
-      className="fixed top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[650px] bg-aura-mesh pointer-events-none -z-10" 
-      aria-hidden="true" 
-    />
+  <div className="min-h-screen bg-transparent text-emiqen-navy flex flex-col font-sans selection:bg-emiqen-cyan/30 selection:text-emiqen-navy relative">
+    {/* Global Persistent AI Background (Grid, Mesh, and Vivid Cosmic Auras) */}
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+      {/* Base Subtle Color Mesh */}
+      <div className="absolute inset-0 bg-subtle-mesh" />
+
+      {/* High-Definition AI Coordinate Grid */}
+      <div 
+        className="absolute inset-0 bg-ai-grid opacity-90"
+        style={{
+          maskImage: 'radial-gradient(ellipse 90% 85% at 50% 25%, #000 35%, transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 90% 85% at 50% 25%, #000 35%, transparent 100%)',
+        }}
+      />
+
+      {/* Top Hero Super-Aura Mesh */}
+      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[1100px] h-[750px] bg-aura-mesh blur-2xl opacity-95" />
+
+      {/* Mid-Page Cyan Glow Aura (Right) */}
+      <div className="absolute top-[38%] -right-32 w-[550px] h-[550px] rounded-full bg-gradient-to-bl from-emiqen-cyan/25 to-transparent blur-[110px]" />
+
+      {/* Mid-Page Violet Glow Aura (Left) */}
+      <div className="absolute top-[68%] -left-32 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-emiqen-violet/20 via-emiqen-blue/15 to-transparent blur-[120px]" />
+    </div>
     
     <SiteHeader />
     <main id="main-content" className="flex-grow relative z-10">

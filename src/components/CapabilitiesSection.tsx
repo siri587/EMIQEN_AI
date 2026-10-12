@@ -24,7 +24,7 @@ export const CapabilitiesSection: React.FC = () => {
   const { capabilities } = siteContent;
 
   return (
-    <section id="platform" className="py-20 md:py-28 bg-emiqen-soft-bg/60 border-t border-slate-200/80 scroll-mt-20">
+    <section id="platform" className="py-20 md:py-28 bg-transparent border-t border-slate-200/70 scroll-mt-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
@@ -50,7 +50,7 @@ export const CapabilitiesSection: React.FC = () => {
             return (
               <div
                 key={item.id}
-                className="rounded-2xl border border-emiqen-soft-border bg-white p-7 shadow-subtle hover:shadow-elevated transition-all duration-300 flex flex-col justify-between group"
+                className="rounded-2xl border border-slate-200/80 bg-white/85 backdrop-blur-md p-7 shadow-subtle hover:shadow-elevated hover:bg-white/95 transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
                   {/* Top Bar with Icon and Tag */}

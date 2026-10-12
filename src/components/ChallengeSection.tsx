@@ -8,7 +8,7 @@ export const ChallengeSection: React.FC = () => {
   const { challenge } = siteContent;
 
   return (
-    <section className="py-20 md:py-28 bg-white border-t border-slate-100">
+    <section className="py-20 md:py-28 bg-transparent border-t border-slate-200/70 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
@@ -32,7 +32,7 @@ export const ChallengeSection: React.FC = () => {
             return (
               <div
                 key={card.id}
-                className="relative rounded-2xl border border-emiqen-soft-border bg-gradient-to-b from-white to-emiqen-soft-bg/30 p-8 shadow-subtle hover:shadow-elevated transition-all duration-300 group"
+                className="relative rounded-2xl border border-slate-200/90 bg-white/90 backdrop-blur-md p-8 shadow-sm hover:shadow-xl hover:border-emiqen-blue/40 transition-all duration-300 group"
               >
                 {/* Accent Top Bar */}
                 <div className="w-10 h-1 rounded-full bg-gradient-to-r from-emiqen-blue to-emiqen-cyan mb-6 group-hover:w-16 transition-all duration-300" />

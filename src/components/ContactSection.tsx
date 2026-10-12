@@ -81,7 +81,7 @@ export const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 md:py-28 bg-white border-t border-slate-100 scroll-mt-20">
+    <section id="contact" className="py-20 md:py-28 bg-transparent border-t border-slate-200/70 scroll-mt-20 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
           {/* Left Column: Context & Direct Contact Notice */}
@@ -130,7 +130,7 @@ export const ContactSection: React.FC = () => {
 
           {/* Right Column: Interactive Form */}
           <div className="lg:col-span-7">
-            <div className="rounded-2xl border border-emiqen-soft-border bg-white p-6 sm:p-8 shadow-elevated">
+            <div className="rounded-2xl border border-slate-200/80 bg-white/90 backdrop-blur-md p-6 sm:p-8 shadow-elevated">
               {submittedStatus === 'unconfigured-ready' ? (
                 /* Honest Unconfigured Backend State as mandated by AGENTS.md */
                 <div className="text-center py-8 space-y-5 animate-in fade-in duration-300">

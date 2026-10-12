@@ -113,7 +113,7 @@ export const DataAdvantageSection: React.FC = () => {
   return (
     <section
       id="data-advantage"
-      className="py-20 md:py-28 bg-white border-t border-slate-100 scroll-mt-20"
+      className="py-20 md:py-28 bg-transparent border-t border-slate-200/70 scroll-mt-20 relative"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24">
 
@@ -140,7 +140,7 @@ export const DataAdvantageSection: React.FC = () => {
             return (
               <div
                 key={item.id}
-                className="rounded-2xl border border-emiqen-soft-border bg-gradient-to-b from-white to-emiqen-soft-bg/30 p-7 shadow-subtle hover:shadow-elevated transition-all duration-300 group"
+                className="rounded-2xl border border-slate-200/80 bg-white/85 backdrop-blur-md p-7 shadow-subtle hover:shadow-elevated hover:bg-white/95 transition-all duration-300 group"
               >
                 <div className="w-11 h-11 rounded-xl bg-emiqen-soft-bg border border-blue-100 flex items-center justify-center text-emiqen-blue group-hover:bg-emiqen-navy group-hover:text-emiqen-cyan transition-colors duration-300 mb-5">
                   <Icon className="w-5 h-5" />
@@ -236,7 +236,7 @@ export const DataAdvantageSection: React.FC = () => {
               return (
                 <div
                   key={card.id}
-                  className="rounded-2xl border border-emiqen-soft-border bg-white p-6 shadow-subtle hover:shadow-elevated transition-all duration-300 flex flex-col group"
+                  className="rounded-2xl border border-slate-200/80 bg-white/85 backdrop-blur-md p-6 shadow-subtle hover:shadow-elevated hover:bg-white/95 transition-all duration-300 flex flex-col group"
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="w-10 h-10 rounded-xl bg-emiqen-soft-bg border border-blue-100 flex items-center justify-center text-emiqen-blue group-hover:bg-emiqen-blue group-hover:text-white transition-colors duration-300">
