@@ -22,9 +22,19 @@ import { DashboardPage } from './pages/DashboardPage';
 
 /** Full landing page */
 const LandingPage: React.FC = () => (
-  <div className="min-h-screen bg-white text-emiqen-navy flex flex-col font-sans selection:bg-emiqen-cyan/30 selection:text-emiqen-navy">
+  <div className="min-h-screen bg-[#FCFDFF] text-emiqen-navy flex flex-col font-sans selection:bg-emiqen-cyan/30 selection:text-emiqen-navy relative overflow-x-hidden">
+    {/* Global Ambient Background Grid & Subtle Radial Aura */}
+    <div 
+      className="fixed inset-0 pointer-events-none -z-10 bg-ai-grid [mask-image:radial-gradient(ellipse_85%_75%_at_50%_15%,#000_20%,transparent_100%)] opacity-75" 
+      aria-hidden="true" 
+    />
+    <div 
+      className="fixed top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[650px] bg-aura-mesh pointer-events-none -z-10" 
+      aria-hidden="true" 
+    />
+    
     <SiteHeader />
-    <main id="main-content" className="flex-grow">
+    <main id="main-content" className="flex-grow relative z-10">
       <HeroSection />
       <ChallengeSection />
       <CapabilitiesSection />
