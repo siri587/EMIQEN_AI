@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://emiqen.com/sitemap.xml
+
